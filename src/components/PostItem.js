@@ -1,5 +1,5 @@
 import { doc, deleteDoc, setDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../firebase/config";
+import { db } from "./firebase";
 
 export function PostItem({ post }) {
   const handleSubmit = async (e) => {

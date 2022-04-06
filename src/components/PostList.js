@@ -1,12 +1,31 @@
 import { useState, useEffect } from "react";
-import { collection, onSnapshot, orderBy, query, doc, serverTimestamp, setDoc } from "firebase/firestore";
-import { db } from "../firebase/config";
+import {
+  collection,
+  getDocs,
+  onSnapshot,
+  orderBy,
+  query,
+  doc,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
+import { db } from "./firebase";
 import { PostItem } from "./PostItem";
 
 export const PostList = () => {
   const [posts, setPosts] = useState([]);
 
-  useEffect(() => {
+  const getPosts = async () => {
+    const docRef = collection(db, "posts");
+    const snapshot = await getDocs(docRef);
+    setPosts(
+      snapshot.docs.map((doc) => {
+        return doc.data();
+      })
+    );
+  };
+
+  const getPostsRealTime = async () => {
     const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, (snap) => {
       setPosts(
@@ -16,8 +35,12 @@ export const PostList = () => {
         }))
       );
     });
-
     return () => unsubscribe();
+  };
+
+  useEffect(() => {
+    // getPostsRealTime();
+    getPosts();
   }, []);
 
   const handleSubmit = async (e) => {
