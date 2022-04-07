@@ -1,6 +1,6 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { UserContext } from "./UserContext";
-import { auth } from "./firebase";
+import { auth, db } from "./firebase";
 import {
   AuthErrorCodes,
   signInWithEmailAndPassword,
@@ -8,6 +8,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { doc, setDoc } from "firebase/firestore";
 
 export const Auth = () => {
   const { user } = useContext(UserContext);
@@ -50,6 +51,14 @@ export const Auth = () => {
     try {
       const userCredentials = await createUserWithEmailAndPassword(auth, email, password);
       console.log(userCredentials.user);
+      if (!userCredentials || !userCredentials.user) {
+        throw new Error("createUserWithEmailAndPassword error");
+      }
+      await setDoc(
+        doc(db, "users", userCredentials.user.uid),
+        JSON.parse(JSON.stringify(userCredentials.user))
+      );
+
       return navigate("/");
       setErrorMessage(null);
     } catch (error) {
@@ -74,7 +83,7 @@ export const Auth = () => {
   return (
     <div className="flex justify-center ">
       <div className="flex flex-col w-full max-w-lg space-y-3">
-        <h1 className="text-3xl text-center">firebase auth</h1>
+        <h1 className="text-3xl text-center">auth</h1>
         <div className="flex justify-center">
           {!user && (
             <form
