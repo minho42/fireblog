@@ -1,27 +1,32 @@
 import { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { UserContext } from "./UserContext";
 
 export const Navbar = () => {
   const { user, setUser } = useContext(UserContext);
-  const navigate = useNavigate();
 
   return (
     <nav>
-      <div className="flex items-center justify-between bg-purple-100 px-10 py-4">
+      <div className="relative flex items-center justify-between bg-purple-100 px-10 h-20 space-x-6">
         <div>
           <Link to="/">
-            <div className="font-semibold">🔥 fireblog</div>
+            <div className="font-semibold hover:animate-ping">🔥 fireblog</div>
           </Link>
         </div>
         <div className="flex space-x-6">
           <Link to="/">
-            <div className="font-semibold">posts</div>
+            <div className="font-semibold px-4 py-2 rounded-full hover:bg-purple-200 transform duration-150 ">
+              posts
+            </div>
           </Link>
-          <Link to="/login">
-            <div className="font-semibold">login</div>
+          <Link to="/auth">
+            <div className="font-semibold px-4 py-2 rounded-full hover:bg-purple-200 transform duration-150 ">
+              auth
+            </div>
           </Link>
         </div>
+
+        {user && <div className="absolute bottom-2 right-10 text-xs font-mono">{user.email}</div>}
       </div>
     </nav>
   );

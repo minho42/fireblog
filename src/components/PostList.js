@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { UserContext } from "./UserContext";
 import {
   collection,
   getDocs,
@@ -11,8 +12,10 @@ import {
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { PostItem } from "./PostItem";
+import { Link } from "react-router-dom";
 
 export const PostList = () => {
+  const { user } = useContext(UserContext);
   const [posts, setPosts] = useState([]);
 
   const getPosts = async () => {
@@ -39,12 +42,14 @@ export const PostList = () => {
   };
 
   useEffect(() => {
-    // getPostsRealTime();
-    getPosts();
+    getPostsRealTime();
+    // getPosts(); // update, delete doesn't work with this ->
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!user) return;
+
     const title = e.target.title.value.trim();
     const content = e.target.content.value.trim();
     if (!title && !content) return;
@@ -54,41 +59,58 @@ export const PostList = () => {
 
     // saveToDb("posts", { title, content });
     const docRef = doc(collection(db, "posts"));
-    await setDoc(docRef, { title, content, createdAt: serverTimestamp(), modifiedAt: serverTimestamp() });
+    await setDoc(docRef, {
+      title,
+      content,
+      createdAt: serverTimestamp(),
+      modifiedAt: serverTimestamp(),
+      owner: user.uid,
+    });
   };
 
   return (
-    <div className="flex justify-center space-y-3">
-      <div className="flex flex-col w-full max-w-lg">
-        <h1 className="text-3xl text-center">PostList</h1>
-        <div className="flex justify-center">
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col w-full items-center justify-center space-y-1"
-          >
-            <label htmlFor="title">
-              <input
-                type="text"
-                id="title"
-                name="title"
-                className="rounded-lg border-2 border-black px-4 py-1"
-                placeholder="title"
-              />
-            </label>
-            <label htmlFor="content">
-              <input
-                type="text"
-                id="content"
-                name="content"
-                className="rounded-lg border-2 border-black px-4 py-1"
-                placeholder="content"
-              />
-            </label>
-            <button className="block bg-purple-200 font-semibold px-4 py-2 rounded-full">Add a post</button>
-          </form>
-        </div>
+    <div className="flex justify-center space-y-3 mb-20">
+      <div className="flex flex-col w-full max-w-lg space-y-3">
+        <h1 className="text-3xl text-center">Posts ({posts && posts.length})</h1>
 
-        <article className="space-y-1">
+        {user ? (
+          <div className="flex justify-center">
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col w-full items-center justify-center space-y-1"
+            >
+              <label htmlFor="title">
+                title
+                <input
+                  type="text"
+                  id="title"
+                  name="title"
+                  className="rounded-lg border-2 border-black px-4 py-1"
+                  placeholder="title"
+                />
+              </label>
+              <label htmlFor="content">
+                content
+                <input
+                  type="text"
+                  id="content"
+                  name="content"
+                  className="rounded-lg border-2 border-black px-4 py-1"
+                  placeholder="content"
+                />
+              </label>
+              <button className="block bg-purple-200 font-semibold px-4 py-2 rounded-full">Add a post</button>
+            </form>
+          </div>
+        ) : (
+          <div className="flex justify-center">
+            <Link to="/auth">
+              <div className="border-b-2 border-black">Please login</div>
+            </Link>
+          </div>
+        )}
+
+        <article className="space-y-3">
           {posts && posts.map((post) => <PostItem key={post.id} post={post} />)}
         </article>
       </div>

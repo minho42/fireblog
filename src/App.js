@@ -2,7 +2,7 @@ import { UserProvider } from "./components/UserContext";
 import { PrivateRoute } from "./components/PrivateRoute";
 import { Navbar } from "./components/Navbar";
 import { PostList } from "./components/PostList";
-import { Login } from "./components/Login";
+import { Auth } from "./components/Auth";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -12,7 +12,7 @@ function App() {
       <UserProvider>
         <Navbar />
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/auth" element={<Auth />} />
           <Route
             path="/"
             element={

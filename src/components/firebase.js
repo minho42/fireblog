@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 import { getFirestore } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBuylxOi7H0JTddtVlQyegDTnhdMgsVchQ",
@@ -18,13 +18,5 @@ const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 const db = getFirestore(app);
 const auth = getAuth(app);
-
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    console.log("onAuthStateChanged: user");
-  } else {
-    console.log("onAuthStateChanged: no user");
-  }
-});
 
 export { storage, db, auth };
