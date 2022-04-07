@@ -22,8 +22,12 @@ export const Auth = () => {
     e.preventDefault();
   };
 
-  const handleLogin = async () => {
-    if (!email && !password) return;
+  const handleLogin = async (e) => {
+    if (!email && !password) {
+      return setErrorMessage("Enter email and password");
+    }
+
+    e.target.innerText = "Logging in...";
 
     try {
       const userCredentials = await signInWithEmailAndPassword(auth, email, password);
@@ -42,11 +46,16 @@ export const Auth = () => {
     } finally {
       setEmail("");
       setPassword("");
+      e.target.innerText = "Login";
     }
   };
 
-  const handleSignup = async () => {
-    if (!email && !password) return;
+  const handleSignup = async (e) => {
+    if (!email && !password) {
+      return setErrorMessage("Enter email and password");
+    }
+
+    e.target.innerText = "Signing up...";
 
     try {
       const userCredentials = await createUserWithEmailAndPassword(auth, email, password);
@@ -73,11 +82,19 @@ export const Auth = () => {
     } finally {
       setEmail("");
       setPassword("");
+      e.target.innerText = "Sigup";
     }
   };
 
-  const handleLogout = async () => {
-    await signOut(auth);
+  const handleLogout = async (e) => {
+    e.target.innerText = "Logging out...";
+
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.log(error);
+    } finally {
+    }
   };
 
   return (
