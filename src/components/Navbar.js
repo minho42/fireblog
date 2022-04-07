@@ -7,10 +7,10 @@ export const Navbar = () => {
 
   return (
     <nav>
-      <div className="relative flex items-center justify-between bg-purple-100 px-10 h-20 space-x-6">
+      <div className="relative flex items-center justify-between bg-purple-100 px-10 h-16 space-x-6">
         <div>
           <Link to="/">
-            <div className="font-semibold hover:animate-ping">🔥 fireblog</div>
+            <div className="font-semibold">🔥 fireblog</div>
           </Link>
         </div>
         <div className="flex space-x-6">
