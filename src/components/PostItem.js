@@ -1,10 +1,32 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
-import { doc, deleteDoc, setDoc, serverTimestamp } from "firebase/firestore";
+import { doc, deleteDoc, setDoc, serverTimestamp, getDoc } from "firebase/firestore";
 import { db } from "./firebase";
 
 export function PostItem({ post }) {
   const { user } = useContext(UserContext);
+  const [postOwnerEmail, setPostOwnerEmail] = useState(null);
+
+  const getOwnerEmail = async () => {
+    try {
+      const docRef = doc(db, "users", post.owner);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists) {
+        setPostOwnerEmail(docSnap.data().email);
+      } else {
+        console.log("docSnap not exists");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (!post || !post?.owner) return;
+
+    getOwnerEmail();
+  }, [post]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,13 +70,17 @@ export function PostItem({ post }) {
           <div className="text-sm">
             {post?.createdAt && new Date(post.createdAt.seconds * 1000).toLocaleDateString()}
           </div>
-          <div>·</div>
-          <div className="text-sm">{post.owner}</div>
+          {postOwnerEmail && (
+            <>
+              <div>·</div>
+              <div className="text-sm">{postOwnerEmail}</div>
+            </>
+          )}
         </div>
         <div className="font-bold">{post.title}</div>
         <div className="bg-white rounded-lg p-3 my-3">{post.content}</div>
 
-        {post.owner === user.uid && (
+        {user && post.owner === user.uid && (
           <div className="flex items-end justify-center space-x-2">
             <form onSubmit={handleSubmit}>
               <label htmlFor="title2">
