@@ -26,7 +26,7 @@ export const Navbar = () => {
           </Link>
         </div>
 
-        {user && <div className="absolute bottom-2 right-10 text-xs font-mono">{user.email}</div>}
+        {user && <div className="absolute bottom-1 right-10 text-xs font-mono">{user.email}</div>}
       </div>
     </nav>
   );
