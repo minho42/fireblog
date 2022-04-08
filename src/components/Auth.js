@@ -6,6 +6,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { doc, setDoc } from "firebase/firestore";
@@ -13,13 +14,34 @@ import { doc, setDoc } from "firebase/firestore";
 export const Auth = () => {
   const { user } = useContext(UserContext);
   const [email, setEmail] = useState("");
+  const [passwordResetEmail, setPasswordResetEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPasswordResetEmail, setShowPasswordResetEmail] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+  };
+
+  const handlePasswordReset = async () => {
+    if (!passwordResetEmail) {
+      return setErrorMessage("Enter email");
+    }
+    setShowPasswordResetEmail(false);
+
+    try {
+      await sendPasswordResetEmail(auth, "minho42@gmail.com");
+    } catch (error) {
+      console.log(error);
+      setErrorMessage("Something went wrong sending password reset email");
+    }
+  };
+
+  const handlePasswordResetCancel = async () => {
+    setErrorMessage(null);
+    setShowPasswordResetEmail(false);
   };
 
   const handleLogin = async (e) => {
@@ -140,9 +162,9 @@ export const Auth = () => {
             </form>
           )}
         </div>
-        <div className="flex w-full justify-center space-x-6">
+        <div className="flex flex-col w-full items-center justify-center space-y-3">
           {!user && (
-            <>
+            <div className="flex space-x-3">
               <button
                 onClick={handleLogin}
                 className="block bg-indigo-200 font-semibold px-6 py-2 rounded-full text-2xl"
@@ -156,7 +178,49 @@ export const Auth = () => {
               >
                 Signup
               </button>
-            </>
+            </div>
+          )}
+          {~user && (
+            <div>
+              {showPasswordResetEmail && (
+                <div className="space-y-3">
+                  <label htmlFor="passwordResetEmail">
+                    passwordResetEmail
+                    <input
+                      onChange={(e) => setPasswordResetEmail(e.target.value)}
+                      type="email"
+                      id="passwordResetEmail"
+                      name="passwordResetEmail"
+                      value={passwordResetEmail}
+                      className="rounded-lg border-2 border-black px-4 py-1"
+                      placeholder="passwordResetEmail"
+                    />
+                  </label>
+                  <div className="flex flex-col items-center">
+                    <button
+                      onClick={handlePasswordReset}
+                      className="block bg-amber-200 font-semibold px-6 py-2 rounded-full text-2xl"
+                    >
+                      Send password reset link
+                    </button>
+                    <button
+                      onClick={handlePasswordResetCancel}
+                      className="block bg-gray-200 font-semibold px-6 py-2 rounded-full text-2xl"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+              {!user && !showPasswordResetEmail && (
+                <button
+                  onClick={() => setShowPasswordResetEmail(true)}
+                  className="block bg-amber-200 font-semibold px-6 py-2 rounded-full text-2xl"
+                >
+                  Forgot assword?
+                </button>
+              )}
+            </div>
           )}
           {user && (
             <button
