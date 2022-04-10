@@ -5,6 +5,7 @@ import {
   getDocs,
   onSnapshot,
   orderBy,
+  limit,
   query,
   doc,
   serverTimestamp,
@@ -19,8 +20,8 @@ export const PostList = () => {
   const [posts, setPosts] = useState([]);
 
   const getPosts = async () => {
-    const docRef = collection(db, "posts");
-    const snapshot = await getDocs(docRef);
+    const colRef = collection(db, "posts");
+    const snapshot = await getDocs(colRef);
     setPosts(
       snapshot.docs.map((doc) => {
         return doc.data();
@@ -29,7 +30,8 @@ export const PostList = () => {
   };
 
   const getPostsRealTime = async () => {
-    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+    const colRef = collection(db, "posts");
+    const q = query(colRef, orderBy("createdAt", "desc"), limit(100));
     const unsubscribe = onSnapshot(q, (snap) => {
       setPosts(
         snap.docs.map((doc) => ({
@@ -58,6 +60,7 @@ export const PostList = () => {
     e.target.content.value = "";
 
     // saveToDb("posts", { title, content });
+    const colRef = collection(db, "posts");
     const docRef = doc(collection(db, "posts"));
     await setDoc(docRef, {
       title,
