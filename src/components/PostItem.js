@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import { UserContext } from "./UserContext";
 import { doc, deleteDoc, setDoc, serverTimestamp, getDoc } from "firebase/firestore";
 import { db } from "./firebase";
@@ -7,7 +7,7 @@ export function PostItem({ post }) {
   const { user } = useContext(UserContext);
   const [postOwnerEmail, setPostOwnerEmail] = useState(null);
 
-  const getOwnerEmail = async () => {
+  const getOwnerEmail = useCallback(async () => {
     try {
       const docRef = doc(db, "users", post.owner);
       const docSnap = await getDoc(docRef);
@@ -20,13 +20,13 @@ export function PostItem({ post }) {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [post.owner]);
 
   useEffect(() => {
     if (!post || !post?.owner) return;
 
     getOwnerEmail();
-  }, [post]);
+  }, [post, getOwnerEmail]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
