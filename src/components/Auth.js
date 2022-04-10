@@ -223,12 +223,15 @@ export const Auth = () => {
             </div>
           )}
           {user && (
-            <button
-              onClick={handleLogout}
-              className="block bg-amber-200 font-semibold px-6 py-2 rounded-full text-2xl"
-            >
-              Logout
-            </button>
+            <>
+              <p className="text-2xl">👋 {user.email}</p>
+              <button
+                onClick={handleLogout}
+                className="block bg-amber-200 font-semibold px-6 py-2 rounded-full text-2xl"
+              >
+                Logout
+              </button>
+            </>
           )}
         </div>
       </div>

@@ -7,12 +7,13 @@ export const Navbar = () => {
 
   return (
     <nav>
-      <div className="relative flex items-center justify-between bg-purple-100 px-10 h-16 space-x-6">
+      <div className="flex items-center justify-between bg-purple-100 text-xl px-10 h-16 space-x-6">
         <div>
           <Link to="/">
             <div className="font-semibold">🔥 fireblog</div>
           </Link>
         </div>
+        {user && <div>{user.email}</div>}
         <div className="flex space-x-6">
           <Link to="/">
             <div className="font-semibold px-4 py-2 rounded-full hover:bg-purple-200 transform duration-150 ">
@@ -25,8 +26,6 @@ export const Navbar = () => {
             </div>
           </Link>
         </div>
-
-        {user && <div className="absolute bottom-1 right-10 text-xs font-mono">{user.email}</div>}
       </div>
     </nav>
   );
