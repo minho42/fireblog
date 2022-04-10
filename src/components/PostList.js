@@ -73,7 +73,7 @@ export const PostList = () => {
 
   return (
     <div className="flex justify-center space-y-3 mb-20">
-      <div className="flex flex-col w-full max-w-lg space-y-3">
+      <div className="flex flex-col w-full  space-y-3">
         <h1 className="text-3xl text-center">Posts ({posts && posts.length})</h1>
 
         {user ? (
@@ -113,7 +113,7 @@ export const PostList = () => {
           </div>
         )}
 
-        <article className="space-y-3">
+        <article className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {posts && posts.map((post) => <PostItem key={post.id} post={post} />)}
         </article>
       </div>
