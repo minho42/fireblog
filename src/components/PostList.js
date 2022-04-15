@@ -29,7 +29,9 @@ export const PostList = () => {
     );
   };
 
-  const getPostsRealTime = async () => {
+  useEffect(() => {
+    // getPosts(); // update, delete doesn't work with this ->
+
     const colRef = collection(db, "posts");
     const q = query(colRef, orderBy("createdAt", "desc"), limit(100));
     const unsubscribe = onSnapshot(q, (snap) => {
@@ -41,11 +43,6 @@ export const PostList = () => {
       );
     });
     return () => unsubscribe();
-  };
-
-  useEffect(() => {
-    getPostsRealTime();
-    // getPosts(); // update, delete doesn't work with this ->
   }, []);
 
   const handleSubmit = async (e) => {
