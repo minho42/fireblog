@@ -58,11 +58,11 @@ export const Auth = () => {
       return navigate("/");
     } catch (error) {
       console.log(error);
-      if (error.code == AuthErrorCodes.USER_DELETED) {
+      if (error.code === AuthErrorCodes.USER_DELETED) {
         setErrorMessage("user-not-found");
-      } else if (error.code == AuthErrorCodes.INVALID_PASSWORD) {
+      } else if (error.code === AuthErrorCodes.INVALID_PASSWORD) {
         setErrorMessage("wrong-password");
-      } else if (error.code == AuthErrorCodes.USER_DISABLED) {
+      } else if (error.code === AuthErrorCodes.USER_DISABLED) {
         setErrorMessage("user-disabled");
       }
     } finally {
@@ -94,11 +94,11 @@ export const Auth = () => {
       setErrorMessage(null);
     } catch (error) {
       console.log(error);
-      if (error.code == AuthErrorCodes.EMAIL_EXISTS) {
+      if (error.code === AuthErrorCodes.EMAIL_EXISTS) {
         setErrorMessage("email-already-in-use");
-      } else if (error.code == AuthErrorCodes.CREDENTIAL_ALREADY_IN_USE) {
+      } else if (error.code === AuthErrorCodes.CREDENTIAL_ALREADY_IN_USE) {
         setErrorMessage("credential-already-in-use");
-      } else if (error.code == AuthErrorCodes.WEAK_PASSWORD) {
+      } else if (error.code === AuthErrorCodes.WEAK_PASSWORD) {
         setErrorMessage("weak-password");
       }
     } finally {

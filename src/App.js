@@ -1,5 +1,4 @@
 import { UserProvider } from "./components/UserContext";
-import { PrivateRoute } from "./components/PrivateRoute";
 import { Navbar } from "./components/Navbar";
 import { PostList } from "./components/PostList";
 import { Auth } from "./components/Auth";
@@ -13,14 +12,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/auth" element={<Auth />} />
-          <Route
-            path="/"
-            element={
-              <PrivateRoute>
-                <PostList />
-              </PrivateRoute>
-            }
-          />
+          <Route path="/" element={<PostList />} />
         </Routes>
       </UserProvider>
     </Router>

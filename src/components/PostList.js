@@ -56,8 +56,6 @@ export const PostList = () => {
     e.target.title.value = "";
     e.target.content.value = "";
 
-    // saveToDb("posts", { title, content });
-    const colRef = collection(db, "posts");
     const docRef = doc(collection(db, "posts"));
     await setDoc(docRef, {
       title,
