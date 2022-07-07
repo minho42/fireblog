@@ -180,7 +180,7 @@ export const Auth = () => {
               </button>
             </div>
           )}
-          {~user && (
+          {!user && (
             <div>
               {showPasswordResetEmail && (
                 <div className="space-y-3">
